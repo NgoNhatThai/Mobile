@@ -1,20 +1,56 @@
 import {View, Image, Text, TextInput, TouchableOpacity, StyleSheet, Button} from "react-native";
-
+import { useState } from "react";
+const data = [
+    {
+        username: 'user1',
+        password: '123',
+    },
+    {
+        username: 'user2',
+        password: '111',
+    },
+    {
+        username: 'user3',
+        password: '222',
+    },
+    {
+        username: 'user4',
+        password: '333',
+    },
+]
 function Screen1(){
+    var [userInput, setUser]= useState('');
+    var [passInput, setPass]= useState('');
+    const checkLogin = () => {
+        let check= false;
+        data.forEach(
+            d => {
+                if(d.username==userInput && d.password==passInput){
+                    check= true;
+                }
+            }
+        )
+        if(check==true){
+            alert("Login successful!")
+        } else {
+            alert("UserName or Password is incorrect!")
+        }
+    };
+    
     return(
         <View style= {styles.container}>
             <View>
                 <Text style={styles.loginText}>LOGIN</Text>
             </View>
             <View style={styles.inputWrapper}>
-                <TextInput style={styles.input} placeholder="Name" />
-                <TextInput style={styles.input} placeholder="Password " />
+                <TextInput style={styles.input} placeholder="Name" onChangeText={setUser} value={userInput} />
+                <TextInput style={styles.input} placeholder="Password " onChangeText={setPass} value={passInput}/>
                 <Image style={[styles.inputImg, styles.inputImg1]} source={require('../assets/user.png')} />
                 <Image style={[styles.inputImg, styles.inputImg2]} source={require('../assets/lock1.png')} />
                 <Image style={[styles.inputImg, styles.inputImg3]} source={require('../assets/eye.png')} />
             </View>
             <View style= {{alignItems:'center'}}>
-                <TouchableOpacity style= {styles.login}>
+                <TouchableOpacity style= {styles.login} onPress={checkLogin}>
                     <Text style={styles.buttonLoginText}>LOGIN</Text>
                 </TouchableOpacity>
             </View>

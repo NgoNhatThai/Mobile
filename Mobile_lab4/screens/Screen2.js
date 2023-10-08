@@ -1,6 +1,32 @@
 import {View, Image, Text, TextInput, TouchableOpacity, StyleSheet, Button} from "react-native";
+import {useState} from "react";
+//import ImagePicker from "react-native-image-picker";
+//import RNFS from "react-native-fs";
+
 
 function Screen2(){
+    const [comment, setComment] = useState('')
+    //const [recent_time, setTime] = useState('')
+
+    const addComment = () => {
+        const data = {
+          time: new Date().toLocaleDateString(),
+          text: comment,
+        };
+        // const filePath = RNFS.DocumentDirectoryPath + '../Data/comment.json';
+      
+        // RNFS.writeFile(filePath, dataJson, 'utf8')
+        //   .then((success) => {
+        //     console.log('Dữ liệu đã được ghi vào tệp thành công.');
+        //   })
+        //   .catch((error) => {
+        //     console.error('Lỗi khi ghi dữ liệu vào tệp:', error);
+        //   });
+        const dataJson = JSON.stringify(data);
+        const comments= []
+        comments.push(dataJson);
+        console.log(comments)
+      };
     return(
         <View style={styles.container}>
             <View style={styles.headerWrapper}>
@@ -19,11 +45,11 @@ function Screen2(){
                 <Image style={styles.imageAdd} source={require('../assets/camera.png')} />
                 <Text style={styles.addText}>Thêm hình ảnh</Text>
             </TouchableOpacity>
-            <TextInput style={styles.comment} placeholder="Hãy chia sẻ những điều bạn thích về sản phẩm" />
+            <TextInput style={[styles.comment]}placeholder="Hãy chia sẻ những điều bạn thích về sản phẩm" onChangeText={setComment} value={comment}  multiline={true} numberOfLines={4}/>
             <TouchableOpacity style={styles.linkWrapper}>
                 <Text style={styles.link}>https://meet.google.com/nsj-ojwi-xpp</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.button}>
+            <TouchableOpacity style={styles.button} onPress={addComment}>
                 <Text style={styles.buttonText}>Gửi</Text>
             </TouchableOpacity>
         </View>
@@ -107,7 +133,8 @@ const styles= StyleSheet.create({
         borderWidth: 2,
         borderColor: 'gray',
         marginTop: 15,
-        borderRadius: 5
+        borderRadius: 5,
+        fontSize: 15
     },
     link: {
         fontFamily: "Roboto",

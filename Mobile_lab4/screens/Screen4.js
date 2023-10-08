@@ -1,6 +1,46 @@
 import {View, Image, Text, TextInput, TouchableOpacity, StyleSheet, Button} from "react-native";
-
+import { useState} from "react";
 function Screen4(){
+    const [price, setPrice] = useState(140000)
+    const [quantity, setQuantiy]= useState(1)
+    const [cost, setCost] = useState(price)
+    const [discount, setDiscount] = useState('  Mã giảm giá')
+    let order={
+        time: new Date().toLocaleDateString(),
+        quantityProduct: 0,
+        price: 140000,
+        appliedDiscount: 0,
+        sumOfCost: 0
+    }
+    const desQuantity = () => {
+        let des= quantity -1;
+        if(des>=0){
+            setQuantiy(des);
+            setPrice(des*140000)
+            setCost(des*140000)
+        } else{ 
+            setQuantiy(0);
+            setPrice(0)
+        }
+    }
+    const insQuantity = () => {
+        let ins= quantity +1;
+        setQuantiy(ins);
+        setPrice(ins*140000)
+        setCost(ins*140000)
+    }
+    const useDiscount= () => {
+        setDiscount("   Discount 10%");
+        let finalPrice= 1.0*price;
+        setCost(finalPrice*0.9);
+    }
+    const createOrder= () =>{
+        order.quantityProduct=quantity;
+        order.appliedDiscount=discount;
+        order.sumOfCost= cost;
+        alert("Create order successfully!");
+        console.log(order);
+    }
     return(
         <View style={styles.container}>
             <View style={styles.header}>
@@ -9,15 +49,15 @@ function Screen4(){
                     <View style={styles.infor}>
                         <Text style={styles.textInHeader}>Nguyên hàm tích phân và ứng dụng</Text>
                         <Text style={[styles.textInHeader,{'marginTop':'15'}]}>Cung cấp bởi Tiki Trading</Text>
-                        <Text style={styles.price}>141.800 đ</Text>
+                        <TextInput style={styles.price} onChangeText={setPrice} value={price}/>
                         <Text style={[styles.textInHeader,{'marginTop':'15'}]}>̶1̶̶4̶̶0̶̶.̶̶0̶̶0̶̶0̶ </Text>
                         <View style={[styles.selectQuantity,{'marginTop':'15'}]}>
                             <View style={styles.viewSelectQuantity}>
-                                <TouchableOpacity style={styles.button}>
+                                <TouchableOpacity style={styles.buttonDes} onPress={desQuantity}>
                                     <Text style={styles.buttonText}>-</Text>
                                 </TouchableOpacity>
-                                <Text style={styles.quantity}>1</Text>
-                                <TouchableOpacity style={styles.button}>
+                                <TextInput style={styles.quantity} onChangeText={setQuantiy} value={quantity}/>
+                                <TouchableOpacity style={styles.buttonIns} onPress={insQuantity}>
                                     <Text style={styles.buttonText}>+</Text>
                                 </TouchableOpacity>
                             </View>
@@ -32,27 +72,27 @@ function Screen4(){
                 <View style={styles.buttonDiscountWrapper}>
                     <TouchableOpacity style={styles.buttonDiscount}>
                         <Image style={styles.yellowBlock} source={require('../assets/yellow_block.png')}/>
-                        <Text style={[{'marginLeft':'10'},{'fontFamily':'Roboto'}, {'fontWeight':'700'}, {'fontSize':'18'}]}>   Mã giảm giá</Text>
+                        <TextInput style={[{'marginLeft':'10'},{'fontFamily':'Roboto'}, {'fontWeight':'700'}, {'fontSize':'18'}]} value={discount}/>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.buttonUseDiscount}>
-                        <Text style={[{'fontFamily':'Roboto'}, {'fontWeight':'700'}, {'fontSize':'22'},{'color':'white'}]}>Áp dụng</Text>
+                    <Text style={[{'fontFamily':'Roboto'}, {'fontWeight':'700'}, {'fontSize':'22'},{'color':'white'}]} onPress={useDiscount}>Áp dụng</Text>
                     </TouchableOpacity>
                 </View>
             </View>
             <View style={styles.textInputDiscountWrapper}>
                 <Text style={styles.text}>Bạn có phiếu quà tặng Tiki/Got it/ Urbox?</Text>
-                <Text style={[styles.text, {'marginLeft':'10'},{'color':'blue'}]}>Nhập tại đây?</Text>
+                <Text style={[styles.text, {'marginLeft':'10'},{'color':'blue'}]}>  Nhập tại đây?</Text>
             </View>
             <View style={styles.tamTinhWrapper}>
-                <Text style={[{'fontFamily':'Roboto'}, {'fontWeight':'700'}, {'fontSize':'30'}]}>Tạm tính</Text>
-                <Text style={[{'fontFamily':'Roboto'}, {'fontWeight':'700'}, {'fontSize':'27'}, {'color':'red'}]}>141.000 d</Text>
+                <Text style={[{'fontFamily':'Roboto'}, {'fontWeight':'700'}, {'fontSize':'30'}, {'marginLeft':'20'}]}>    Tạm tính</Text>
+                <TextInput style={[{'fontFamily':'Roboto'}, {'fontWeight':'700'}, {'fontSize':'27'}, {'color':'red'}]} value={price}/>
             </View>
             <View style={styles.rooter}>
                 <View style={styles.thanhTienWrapper}>
-                    <Text style={[{'fontFamily':'Roboto'}, {'fontWeight':'700'}, {'fontSize':'30'},{'color':'light-gray'}]}>Thành tiền</Text>
-                    <Text style={[{'fontFamily':'Roboto'}, {'fontWeight':'700'}, {'fontSize':'27'}, {'color':'red'}]}>141.000 d</Text>
+                    <Text style={[{'fontFamily':'Roboto'}, {'fontWeight':'700'}, {'fontSize':'30'},{'color':'light-gray'}]}>    Thành tiền</Text>
+                    <TextInput style={[{'fontFamily':'Roboto'}, {'fontWeight':'700'}, {'fontSize':'27'}, {'color':'red'}]} value={cost}/>
                 </View>
-                <TouchableOpacity style={styles.buttonDone}>
+                <TouchableOpacity style={styles.buttonDone} onPress={createOrder}>
                     <Text style={styles.buttonDoneText}>TIẾN HÀNH ĐẶT HÀNG</Text>
                 </TouchableOpacity>
             </View>
@@ -81,7 +121,8 @@ const styles= StyleSheet.create({
     },
     infor: {
         flexDirection: 'column',
-        marginLeft: 10
+        marginLeft: 10,
+        justifyContent: 'space-around'
     },
     textInHeader: {
         fontFamily: 'Roboto',
@@ -105,20 +146,20 @@ const styles= StyleSheet.create({
         marginTop: 5
     },
     buttonDes: {
-        width: 15,
-        height: 15,
-        backgroundColor: 'white',
+        width: 20,
+        height: 20,
         borderWidth: 2,
-        borderRadius: 2,
-        backgroundColor: 'gray'
+        justifyContent: 'center',
+        alignItems: 'center',
+        display: 'flex'
     },
     buttonIns: {
-        width: 15,
-        height: 15,
-        backgroundColor: 'white',
+        width: 20,
+        height: 20,
         borderWidth: 2,
-        borderRadius: 2,
-        backgroundColor: 'gray'
+        justifyContent: 'center',
+        alignItems: 'center',
+        display: 'flex'
     },
     viewSelectQuantity: {
         flexDirection: 'row',
@@ -139,8 +180,12 @@ const styles= StyleSheet.create({
         fontWeight: 'bold',
       },
       quantity: {
-        marginHorizontal: 10,
+        marginHorizontal: 5,
         fontSize: 18,
+        width: 15,
+        height: 15,
+        textAlign: 'center',
+        justifyContent: 'center'
       },
       discountHaving: {
         flexDirection: 'row',
@@ -174,7 +219,8 @@ const styles= StyleSheet.create({
       },
       yellowBlock: {
         width: 32,
-        height: 16
+        height: 16,
+        marginLeft: 10
       },
       buttonUseDiscount: {
         width: 99,
@@ -199,7 +245,7 @@ const styles= StyleSheet.create({
         marginTop: 18,
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'space-around'
+        justifyContent: 'space-between'
       },
       rooter: {
         width: '100%',
@@ -210,10 +256,11 @@ const styles= StyleSheet.create({
         alignItems: 'center'
       },
       thanhTienWrapper: {
-        flexDirection: 'row',
+        width: '100%',
+        height: 51,
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'space-around',
+        justifyContent: 'space-between',
         marginTop: 15
       },
       buttonDone: {
