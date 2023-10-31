@@ -1,6 +1,20 @@
 import { StyleSheet, View, Text, TextInput, Image, TouchableOpacity } from "react-native"
+import {useEffect, useState} from "react"
 
-function Screen_01() {
+function Screen_01({navigation}) {
+    const [nameList, setNameList] = useState([])
+    const [name, setName] = useState('')
+    useEffect(()=>{
+            getListName();
+        }, []
+    )
+    const getListName = ()=>{
+        fetch('https://654108cc45bedb25bfc31cd9.mockapi.io/todoList')
+        .then(response => response.json())
+        .then((json)=>{
+            setNameList(json)
+        })
+    }
     return ( 
         <View style = { styles.container } >
             <View style = { styles.headerWrapper } >
@@ -10,10 +24,17 @@ function Screen_01() {
                 <Text style={styles.text}>MANAGE YOUR TASK</Text>
             </View>
             <View style={styles.inputWrapper}>
-                <TextInput placeholder="Enter your name" style={styles.input}/>
+                <TextInput placeholder="Enter your name" style={styles.input} onChangeText={setName} />
                 <Image style={styles.inputImg} source={require('../assets/Frame.png')} />
             </View>
-            <TouchableOpacity style={styles.btn}>
+            <TouchableOpacity style={styles.btn} onPress={()=>{
+                nameList.forEach(item => {
+                    if(item.name==name){
+                        let todos=item.todos
+                        navigation.navigate('Screen_02', {nameAPI: name, todosAPI: todos});
+                    }
+                });
+            }}>
                 <Text style={styles.btnText}>GET STARTED -</Text>
             </TouchableOpacity>
         </View>
