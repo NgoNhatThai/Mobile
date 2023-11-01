@@ -8,7 +8,7 @@ const Item =({id, title}) => (
     </View>  
 )
 function Screen_02({navigation, route}){
-    const {nameAPI, todosAPI}= route.params
+    const {nameAPI, todosAPI, idAPI}= route.params
     // const dataName= nameAPI.params
     // const todos= todosAPI
     console.log(nameAPI);
@@ -38,7 +38,9 @@ function Screen_02({navigation, route}){
                 renderItem={({item})=><Item id={item.id} title={item.title}/>}
             />
         </SafeAreaView>
-        <TouchableOpacity style={styles.addBtn}>
+        <TouchableOpacity style={styles.addBtn} onPress={()=>{
+            navigation.navigate('Screen_03', {nameAPI: nameAPI, idAPI: idAPI})
+        }}>
             <Text style={styles.addText}>+</Text>
         </TouchableOpacity>
     </View>

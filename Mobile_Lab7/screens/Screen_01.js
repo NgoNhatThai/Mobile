@@ -18,7 +18,7 @@ function Screen_01({navigation}) {
     return ( 
         <View style = { styles.container } >
             <View style = { styles.headerWrapper } >
-
+                <Image style={styles.imgHeader} source={require('../assets/img_header.png')}/>
             </View> 
             <View style={styles.textWrapper}>
                 <Text style={styles.text}>MANAGE YOUR TASK</Text>
@@ -31,11 +31,12 @@ function Screen_01({navigation}) {
                 nameList.forEach(item => {
                     if(item.name==name){
                         let todos=item.todos
-                        navigation.navigate('Screen_02', {nameAPI: name, todosAPI: todos});
+                        let id=item.id
+                        navigation.navigate('Screen_02', {nameAPI: name, todosAPI: todos, idAPI: id});
                     }
                 });
             }}>
-                <Text style={styles.btnText}>GET STARTED -</Text>
+                <Text style={styles.btnText}>GET STARTED</Text>
             </TouchableOpacity>
         </View>
     )
@@ -53,6 +54,10 @@ const styles = StyleSheet.create({
         margin: 40,
         borderWidth: 2,
         borderColor: 'black'
+    },
+    imgHeader: {
+        width: 270,
+        height: 270
     },
     textWrapper: {
         width: 200,
