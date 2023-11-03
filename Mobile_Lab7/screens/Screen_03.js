@@ -1,14 +1,29 @@
 import { useState } from "react";
 import { StyleSheet, View, Text, TextInput, Image, TouchableOpacity, SafeAreaView, FlatList} from "react-native"
 function Screen_03({navigation, route}){
-    console.log(route.params);
-    const {nameAPI, idAPI} = route.params
+    //console.log(route.params);
+    const {nameAPI, idAPI, todosAPI} = route.params
     const [name, setName]= useState(nameAPI)
-    
+    const [todo, setTodo]= useState()
+    const [nameList, setNameList] = useState([])
+    var todos;
+    var newId;
      return(
         <View style={styles.container}>
             <View style={styles.header}>
-                <TouchableOpacity style={styles.backBtn}>
+                <TouchableOpacity style={styles.backBtn} onPress={()=>{
+                    fetch('https://654108cc45bedb25bfc31cd9.mockapi.io/todoList')
+                    .then(response => response.json())
+                    .then((json)=>{
+                        setNameList(json);
+                    },[])
+                    nameList.forEach(item => {
+                        if(item.name==name){
+                            newId= item.id;
+                        }
+                    });
+                    navigation.navigate('Screen_02', {nameAPI: nameAPI, todosAPI: todos , idAPI: newId})
+                }}>
                     <Image style={styles.backImg} source={require('../assets/Icon Button 11.png')}/>
                 </TouchableOpacity>
                 <Image style={styles.accImg} source={require('../assets/Avt.png')}/>
@@ -18,28 +33,51 @@ function Screen_03({navigation, route}){
             <View style={styles.textWrapper}>
                 <Text style={styles.text}>ADD YOUR JOB</Text>
             </View>
-            <TextInput style={styles.input} placeholder="Input your job"/>
+            <TextInput style={styles.input} placeholder="Input your job"onChangeText={setTodo}/>
             <Image style={styles.inputIcon} source={require('../assets/input_icon.png')}/>
             <TouchableOpacity style={styles.finishBtn} onPress={()=>{
                 const newTodo = {
                     id: "5",
-                    title: "Your New Task"
-                };    
-                const url= 'https://654108cc45bedb25bfc31cd9.mockapi.io/todoList/'+ idAPI;                          
+                    title: todo
+                };  
+                console.log(newTodo);  
+                todos= todosAPI.concat(newTodo)
+                todosAPI.concat(newTodo)
+                const newData ={
+                    id: idAPI,
+                    name: nameAPI,
+                    todos: todos
+                }
+                console.log(newData);
+                const url= 'https://654108cc45bedb25bfc31cd9.mockapi.io/todoList';  
+                const urlDelete= 'https://654108cc45bedb25bfc31cd9.mockapi.io/todoList/'+idAPI;
+                console.log(urlDelete);
+                //Deleta old data:
+                fetch(urlDelete, {
+                    method: 'DELETE',
+                    }).then(res => {
+                    if (res.ok) {
+                        return res.json();
+                    }
+                    }).then(task => {
+                        console.log("deleted!");
+                    }).catch(error => {
+                        console.log("delete error");
+                })         
+                // Post new data:               
                 fetch(url, {
                     method: 'POST',
-                    headers: {
-                    'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(newTodo)
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                    console.log('Mục mới đã được thêm vào:', data);
+                    headers: {'content-type':'application/json'},
+                    body: JSON.stringify(newData)
+                    }).then(res => {
+                    if (res.ok) {
+                        return res.json();
+                    }
+                    }).then(task => {
+                        console.log("Ok");
+                    }).catch(error => {
+                        console.log("Error");
                     })
-                    .catch(error => {
-                    console.error('Lỗi khi thêm mục mới:', error);
-                    }); 
             }}>
                 <Text style={styles.btnText}>FINISH</Text>
             </TouchableOpacity>

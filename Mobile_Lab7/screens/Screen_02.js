@@ -1,5 +1,5 @@
 import { StyleSheet, View, Text, TextInput, Image, TouchableOpacity, SafeAreaView, FlatList} from "react-native"
-import {useState} from "react"
+import {useEffect, useRef, useState} from "react"
 const Item =({id, title}) => (
     <View style={styles.wrapper}>
         <TextInput style={styles.component} value={title}/>
@@ -15,6 +15,9 @@ function Screen_02({navigation, route}){
     console.log(todosAPI);
     const [name, setName] = useState(nameAPI)
     const [DATA, setData] = useState(todosAPI);
+    useEffect(()=>{
+        setData(todosAPI)
+    })
    return(
     <View style={styles.container}>
         <View style={styles.header}>
@@ -34,12 +37,12 @@ function Screen_02({navigation, route}){
         <SafeAreaView>
             <FlatList 
                 data={DATA}
-                keyExtractor={item => item.id}
+                keyExtractor={item => item.title}
                 renderItem={({item})=><Item id={item.id} title={item.title}/>}
             />
         </SafeAreaView>
         <TouchableOpacity style={styles.addBtn} onPress={()=>{
-            navigation.navigate('Screen_03', {nameAPI: nameAPI, idAPI: idAPI})
+            navigation.navigate('Screen_03', {nameAPI: nameAPI, idAPI: idAPI, todosAPI: todosAPI})
         }}>
             <Text style={styles.addText}>+</Text>
         </TouchableOpacity>
