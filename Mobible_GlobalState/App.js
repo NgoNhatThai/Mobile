@@ -1,31 +1,17 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import store from './redux/store';
-import inscrement from './redux/inscrement';
 import { useState } from 'react';
-import descrement from './redux/descrement';
+import { Provider } from 'react-redux';
+import Component_01 from './screens/component_01';
 
 
 export default function App() {
   const [count, setCount] = useState(0)
   return (
-    <View style={styles.container}>
-      <View  style={styles.component}>
-            <TouchableOpacity style={styles.btn} onPress={()=>{
-                store.dispatch(descrement);
-                setCount(store.getState().count)
-            }}>
-                <Text style={styles.text}>-</Text>
-            </TouchableOpacity>
-            <Text style={styles.countText}>{count}</Text>
-            <TouchableOpacity style={styles.btn} onPress={()=>{
-                store.dispatch(inscrement);
-                setCount(store.getState().count)
-            }}>
-                <Text style={styles.text}>+</Text>
-            </TouchableOpacity>
-        </View>
-    </View>
+    <Provider store={store}>
+      <Component_01 />
+    </Provider>
   );
 }
 
